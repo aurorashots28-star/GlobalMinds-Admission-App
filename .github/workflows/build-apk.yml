@@ -16,7 +16,7 @@ uses: actions/checkout@v4
 ```
   - name: Extract Android project
     run: |
-      unzip -q "GlobalMinds_Admission_Officer_Android_Clean (1).zip" -d /tmp/globalminds
+      unzip -q 'GlobalMinds_Admission_Officer_Android_Clean (1).zip' -d /tmp/globalminds
       cp -R /tmp/globalminds/. .
       rm -rf /tmp/globalminds
 
