@@ -1,43 +1,42 @@
-
 name: Build GlobalMinds APK
 
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - main
+workflow_dispatch:
+push:
+branches:
+- main
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+build:
+runs-on: ubuntu-latest
+steps:
+- name: Checkout repository
+uses: actions/checkout@v4
 
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+```
+  - name: Extract Android project
+    run: |
+      unzip -q "GlobalMinds_Admission_Officer_Android_Clean (1).zip" -d /tmp/globalminds
+      cp -R /tmp/globalminds/. .
+      rm -rf /tmp/globalminds
 
-      - name: Extract Android project
-        run: |
-          unzip -q GlobalMinds_Admission_Officer_Android_Clean.zip -d /tmp/globalminds
-          cp -R /tmp/globalminds/. .
-          rm -rf /tmp/globalminds
-          rm -f GlobalMinds_Admission_Officer_Android_Clean.zip
+  - name: Set up Java
+    uses: actions/setup-java@v4
+    with:
+      distribution: temurin
+      java-version: '17'
 
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: temurin
-          java-version: '17'
+  - name: Set up Gradle
+    uses: gradle/actions/setup-gradle@v4
+    with:
+      gradle-version: '8.9'
 
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          gradle-version: '8.9'
+  - name: Build APK
+    run: gradle :app:assembleDebug --no-daemon
 
-      - name: Build APK
-        run: gradle :app:assembleDebug --no-daemon
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: GlobalMinds-Admission-Officer-APK
-          path: app/build/outputs/apk/debug/app-debug.apk
+  - name: Upload APK
+    uses: actions/upload-artifact@v4
+    with:
+      name: GlobalMinds-Admission-Officer-APK
+      path: app/build/outputs/apk/debug/app-debug.apk
+```
